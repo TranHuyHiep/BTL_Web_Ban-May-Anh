@@ -70,5 +70,27 @@ function btnContinue() {
 }
 
 function btnCheckout() {
+    var hoaDonBan = {
+        TongTienHD: 111,
+        PhuongThucThanhToan: 0,
+        GhiChu: 'cc',
+        TrangThai: 0,
+        MaKhachHang: 'N01'
+    }
+
+    $.ajax({
+        url: 'https://localhost:44368/shoppingcart/CreateOrder',
+        type: 'POST',
+        dataType: 'json',
+        data: {
+            orderViewModel: JSON.stringify(hoaDonBan)
+        },
+        success: function (res) {
+            if (res.status) {
+                alert("Mua hàng thành thành công!")
+            }
+            btnDeleteAll();
+        }
+    })
 
 }

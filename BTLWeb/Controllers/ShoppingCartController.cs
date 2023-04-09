@@ -1,6 +1,7 @@
 ﻿using BTLWeb.Constants;
 using BTLWeb.Models;
 using BTLWeb.Models.ViewModels;
+using BTLWeb.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,8 @@ namespace BTLWeb.Controllers
     public class ShoppingCartController : Controller
     {
         QlbanMayAnhContext db = new QlbanMayAnhContext();
+        HoaDonBanService hoaDonBanService = new HoaDonBanService();
+
         // GET: ShoppingCartController1
         public ActionResult Index()
         {
@@ -129,10 +132,10 @@ namespace BTLWeb.Controllers
         }*/
 
 
-        /*public ActionResult CreateOrder(string orderViewModel)
+        public JsonResult CreateOrder(string orderViewModel)
         {
             var order = new JavaScriptSerializer().Deserialize<OrderViewModel>(orderViewModel);
-
+            order.NgayHoaDon = DateTime.Now.ToString();
             var orderNew = new THoaDonBan();
 
             orderNew.UpdateOrder(order);
@@ -140,76 +143,31 @@ namespace BTLWeb.Controllers
             var cart = HttpContext.Session.Get<List<ShoppingCartViewModel>>(CommonConstants.SessionCart);
             
             List<TChiTietHdb> orderDetails = new List<TChiTietHdb>();
-
+             
             foreach (var item in cart)
             {
-                var detail = new OrderDetail();
-                detail.ProductID = item.ProductId;
-                detail.Quantity = item.Quantity;
-                detail.Price = item.Product.Price;
+                var detail = new TChiTietHdb();
+                detail.MaSp = item.ProductId;
+                detail.SoLuongBan = item.Quantity;
+                detail.DonGiaBan = item.Product.GiaLonNhat;
                 orderDetails.Add(detail);
-
-                isEnough = _productService.SellProduct(item.ProductId, item.Quantity);
-                break;
             }
 
-            var orderReturn = _orderService.Create(ref orderNew, orderDetails);
-            _productService.Save();
-
-            if (order.PaymentMethod == "CASH")
+            if(hoaDonBanService.Create(orderNew, orderDetails) == true)
             {
                 return Json(new
-                {
-                    status = true
-                });
+                    {
+                        status = true
+                    });
             }
             else
             {
-
-                var currentLink = ConfigHelper.GetByKey("CurrentLink");
-                RequestInfo info = new RequestInfo();
-                info.Merchant_id = merchantId;
-                info.Merchant_password = merchantPassword;
-                info.Receiver_email = merchantEmail;
-
-
-
-                info.cur_code = "vnd";
-                info.bank_code = order.BankCode;
-
-                info.Order_code = orderReturn.ID.ToString();
-                info.Total_amount = orderDetails.Sum(x => x.Quantity * x.Price).ToString();
-                info.fee_shipping = "0";
-                info.Discount_amount = "0";
-                info.order_description = "Thanh toán đơn hàng tại TeduShop";
-                info.return_url = currentLink + "xac-nhan-don-hang.html";
-                info.cancel_url = currentLink + "huy-don-hang.html";
-
-                info.Buyer_fullname = order.CustomerName;
-                info.Buyer_email = order.CustomerEmail;
-                info.Buyer_mobile = order.CustomerMobile;
-
-                APICheckoutV3 objNLChecout = new APICheckoutV3();
-                ResponseInfo result = objNLChecout.GetUrlCheckout(info, order.PaymentMethod);
-                if (result.Error_code == "00")
+                return Json(new
                 {
-                    return Json(new
-                    {
-                        status = true,
-                        urlCheckout = result.Checkout_url,
-                        message = result.Description
-                    });
-                }
-                else
-                    return Json(new
-                    {
-                        status = false,
-                        message = result.Description
-                    });
+                    status = false
+                });
             }
-
-
-
-        }*/
+            
+        }
     }
 }

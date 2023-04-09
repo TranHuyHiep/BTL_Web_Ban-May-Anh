@@ -5,7 +5,9 @@ namespace BTLWeb.Models;
 
 public partial class TChiTietHdb
 {
-    public string MaHoaDon { get; set; } = null!;
+    public int Id { get; set; }
+
+    public int MaHoaDon { get; set; }
 
     public string MaSp { get; set; } = null!;
 

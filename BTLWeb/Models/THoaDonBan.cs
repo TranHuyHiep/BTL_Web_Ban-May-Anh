@@ -5,13 +5,11 @@ namespace BTLWeb.Models;
 
 public partial class THoaDonBan
 {
-    public string MaHoaDon { get; set; } = null!;
+    public int MaHoaDon { get; set; }
 
-    public DateTime? NgayHoaDon { get; set; }
+    public string? NgayHoaDon { get; set; }
 
     public string? MaKhachHang { get; set; }
-
-    public string? MaNhanVien { get; set; }
 
     public decimal? TongTienHd { get; set; }
 
@@ -25,9 +23,9 @@ public partial class THoaDonBan
 
     public string? GhiChu { get; set; }
 
-    public virtual TKhachHang? MaKhachHangNavigation { get; set; }
+    public int? Status { get; set; }
 
-    public virtual TNhanVien? MaNhanVienNavigation { get; set; }
+    public virtual TKhachHang? MaKhachHangNavigation { get; set; }
 
     public virtual ICollection<TChiTietHdb> TChiTietHdbs { get; } = new List<TChiTietHdb>();
 }

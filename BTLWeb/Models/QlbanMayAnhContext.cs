@@ -33,8 +33,6 @@ public partial class QlbanMayAnhContext : DbContext
 
     public virtual DbSet<TLoaiSp> TLoaiSps { get; set; }
 
-    public virtual DbSet<TNhanVien> TNhanViens { get; set; }
-
     public virtual DbSet<TQuocGia> TQuocGia { get; set; }
 
     public virtual DbSet<TUser> TUsers { get; set; }
@@ -82,21 +80,18 @@ public partial class QlbanMayAnhContext : DbContext
 
         modelBuilder.Entity<TChiTietHdb>(entity =>
         {
-            entity.HasKey(e => new { e.MaHoaDon, e.MaSp });
-
             entity.ToTable("tChiTietHDB");
 
-            entity.Property(e => e.MaHoaDon)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength();
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.DonGiaBan).HasColumnType("money");
+            entity.Property(e => e.GhiChu).HasMaxLength(100);
             entity.Property(e => e.MaSp)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("MaSP");
-            entity.Property(e => e.DonGiaBan).HasColumnType("money");
-            entity.Property(e => e.GhiChu).HasMaxLength(100);
 
             entity.HasOne(d => d.MaHoaDonNavigation).WithMany(p => p.TChiTietHdbs)
                 .HasForeignKey(d => d.MaHoaDon)
@@ -212,17 +207,9 @@ public partial class QlbanMayAnhContext : DbContext
 
             entity.ToTable("tHoaDonBan");
 
-            entity.Property(e => e.MaHoaDon)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength();
             entity.Property(e => e.GhiChu).HasMaxLength(100);
             entity.Property(e => e.GiamGiaHd).HasColumnName("GiamGiaHD");
             entity.Property(e => e.MaKhachHang)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.MaNhanVien)
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .IsFixedLength();
@@ -230,7 +217,10 @@ public partial class QlbanMayAnhContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .IsFixedLength();
-            entity.Property(e => e.NgayHoaDon).HasColumnType("datetime");
+            entity.Property(e => e.NgayHoaDon)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .IsFixedLength();
             entity.Property(e => e.ThongTinThue).HasMaxLength(250);
             entity.Property(e => e.TongTienHd)
                 .HasColumnType("money")
@@ -239,10 +229,6 @@ public partial class QlbanMayAnhContext : DbContext
             entity.HasOne(d => d.MaKhachHangNavigation).WithMany(p => p.THoaDonBans)
                 .HasForeignKey(d => d.MaKhachHang)
                 .HasConstraintName("FK_tHoaDonBan_tKhachHang");
-
-            entity.HasOne(d => d.MaNhanVienNavigation).WithMany(p => p.THoaDonBans)
-                .HasForeignKey(d => d.MaNhanVien)
-                .HasConstraintName("FK_tHoaDonBan_tNhanVien");
         });
 
         modelBuilder.Entity<TKhachHang>(entity =>
@@ -303,44 +289,6 @@ public partial class QlbanMayAnhContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength();
             entity.Property(e => e.Loai).HasMaxLength(100);
-        });
-
-        modelBuilder.Entity<TNhanVien>(entity =>
-        {
-            entity.HasKey(e => e.MaNhanVien);
-
-            entity.ToTable("tNhanVien");
-
-            entity.Property(e => e.MaNhanVien)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.AnhDaiDien)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.ChucVu).HasMaxLength(100);
-            entity.Property(e => e.DiaChi).HasMaxLength(150);
-            entity.Property(e => e.GhiChu).HasMaxLength(100);
-            entity.Property(e => e.NgaySinh).HasColumnType("date");
-            entity.Property(e => e.SoDienThoai1)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.SoDienThoai2)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.TenNhanVien).HasMaxLength(100);
-            entity.Property(e => e.Username)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("username");
-
-            entity.HasOne(d => d.UsernameNavigation).WithMany(p => p.TNhanViens)
-                .HasForeignKey(d => d.Username)
-                .HasConstraintName("FK_tNhanVien_tUser");
         });
 
         modelBuilder.Entity<TQuocGia>(entity =>
