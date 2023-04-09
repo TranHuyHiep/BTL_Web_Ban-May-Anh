@@ -10,7 +10,7 @@ namespace BTLWeb.Areas.Admin.Controllers
     [Route("admin/homeadmin")]
     public class HomeAdminController : Controller
     {
-        QlbanManhContext db = new QlbanManhContext();
+        QlbanMayAnhContext db = new QlbanMayAnhContext();
         [Route("")]
         [Route("Index")]
         public IActionResult Index()

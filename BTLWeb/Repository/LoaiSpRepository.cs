@@ -4,8 +4,8 @@ namespace BTLWeb.Repository
 {
     public class LoaiSpRepository : IELoaiSpRepository
     {
-        private readonly QlbanManhContext _context;
-        public LoaiSpRepository(QlbanManhContext context)
+        private readonly QlbanMayAnhContext _context;
+        public LoaiSpRepository(QlbanMayAnhContext context)
         {
             _context = context;
         }

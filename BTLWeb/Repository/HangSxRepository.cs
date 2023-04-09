@@ -4,8 +4,8 @@ namespace BTLWeb.Repository
 {
     public class HangSxRepository : IHangSxRepository
     {
-        private readonly QlbanManhContext _context;
-        public HangSxRepository(QlbanManhContext context)
+        private readonly QlbanMayAnhContext _context;
+        public HangSxRepository(QlbanMayAnhContext context)
         {
             _context = context;
         }

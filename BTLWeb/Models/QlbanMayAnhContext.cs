@@ -4,26 +4,22 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BTLWeb.Models;
 
-public partial class QlbanManhContext : DbContext
+public partial class QlbanMayAnhContext : DbContext
 {
-    public QlbanManhContext()
+    public QlbanMayAnhContext()
     {
     }
 
-    public QlbanManhContext(DbContextOptions<QlbanManhContext> options)
+    public QlbanMayAnhContext(DbContextOptions<QlbanMayAnhContext> options)
         : base(options)
     {
     }
-
-    public virtual DbSet<TAnhChiTietSp> TAnhChiTietSps { get; set; }
 
     public virtual DbSet<TAnhSp> TAnhSps { get; set; }
 
     public virtual DbSet<TChatLieu> TChatLieus { get; set; }
 
     public virtual DbSet<TChiTietHdb> TChiTietHdbs { get; set; }
-
-    public virtual DbSet<TChiTietSanPham> TChiTietSanPhams { get; set; }
 
     public virtual DbSet<TDanhMucSp> TDanhMucSps { get; set; }
 
@@ -33,13 +29,9 @@ public partial class QlbanManhContext : DbContext
 
     public virtual DbSet<TKhachHang> TKhachHangs { get; set; }
 
-    public virtual DbSet<TKichThuocCamBien> TKichThuocCamBiens { get; set; }
-
     public virtual DbSet<TLoaiDt> TLoaiDts { get; set; }
 
     public virtual DbSet<TLoaiSp> TLoaiSps { get; set; }
-
-    public virtual DbSet<TMauSac> TMauSacs { get; set; }
 
     public virtual DbSet<TNhanVien> TNhanViens { get; set; }
 
@@ -49,32 +41,10 @@ public partial class QlbanManhContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=TRANHUYHIEP;Initial Catalog=QLBanMAnh;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+        => optionsBuilder.UseSqlServer("Data Source=TRANHUYHIEP;Initial Catalog=QLBanMayAnh;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<TAnhChiTietSp>(entity =>
-        {
-            entity.HasKey(e => new { e.MaChiTietSp, e.TenFileAnh });
-
-            entity.ToTable("tAnhChiTietSP");
-
-            entity.Property(e => e.MaChiTietSp)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("MaChiTietSP");
-            entity.Property(e => e.TenFileAnh)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .IsFixedLength();
-
-            entity.HasOne(d => d.MaChiTietSpNavigation).WithMany(p => p.TAnhChiTietSps)
-                .HasForeignKey(d => d.MaChiTietSp)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_tAnhChiTietSP_tChiTietSanPham");
-        });
-
         modelBuilder.Entity<TAnhSp>(entity =>
         {
             entity.HasKey(e => new { e.MaSp, e.TenFileAnh });
@@ -112,54 +82,11 @@ public partial class QlbanManhContext : DbContext
 
         modelBuilder.Entity<TChiTietHdb>(entity =>
         {
-            entity.HasKey(e => new { e.MaHoaDon, e.MaChiTietSp });
+            entity.HasKey(e => new { e.MaHoaDon, e.MaSp });
 
             entity.ToTable("tChiTietHDB");
 
             entity.Property(e => e.MaHoaDon)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.MaChiTietSp)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("MaChiTietSP");
-            entity.Property(e => e.DonGiaBan).HasColumnType("money");
-            entity.Property(e => e.GhiChu).HasMaxLength(100);
-
-            entity.HasOne(d => d.MaChiTietSpNavigation).WithMany(p => p.TChiTietHdbs)
-                .HasForeignKey(d => d.MaChiTietSp)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_tChiTietHDB_tChiTietSanPham");
-
-            entity.HasOne(d => d.MaHoaDonNavigation).WithMany(p => p.TChiTietHdbs)
-                .HasForeignKey(d => d.MaHoaDon)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_tChiTietHDB_tHoaDonBan");
-        });
-
-        modelBuilder.Entity<TChiTietSanPham>(entity =>
-        {
-            entity.HasKey(e => e.MaChiTietSp);
-
-            entity.ToTable("tChiTietSanPham");
-
-            entity.Property(e => e.MaChiTietSp)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("MaChiTietSP");
-            entity.Property(e => e.AnhDaiDien)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.MaKtcamBien)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("MaKTCamBien");
-            entity.Property(e => e.MaMauSac)
                 .HasMaxLength(25)
                 .IsUnicode(false)
                 .IsFixedLength();
@@ -168,23 +95,18 @@ public partial class QlbanManhContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength()
                 .HasColumnName("MaSP");
-            entity.Property(e => e.Slton).HasColumnName("SLTon");
-            entity.Property(e => e.Video)
-                .HasMaxLength(100)
-                .IsUnicode(false)
-                .IsFixedLength();
+            entity.Property(e => e.DonGiaBan).HasColumnType("money");
+            entity.Property(e => e.GhiChu).HasMaxLength(100);
 
-            entity.HasOne(d => d.MaKtcamBienNavigation).WithMany(p => p.TChiTietSanPhams)
-                .HasForeignKey(d => d.MaKtcamBien)
-                .HasConstraintName("FK_tChiTietSanPham_tKichThuocCamBien");
+            entity.HasOne(d => d.MaHoaDonNavigation).WithMany(p => p.TChiTietHdbs)
+                .HasForeignKey(d => d.MaHoaDon)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_tChiTietHDB_tHoaDonBan");
 
-            entity.HasOne(d => d.MaMauSacNavigation).WithMany(p => p.TChiTietSanPhams)
-                .HasForeignKey(d => d.MaMauSac)
-                .HasConstraintName("FK_tChiTietSanPham_tMauSac");
-
-            entity.HasOne(d => d.MaSpNavigation).WithMany(p => p.TChiTietSanPhams)
+            entity.HasOne(d => d.MaSpNavigation).WithMany(p => p.TChiTietHdbs)
                 .HasForeignKey(d => d.MaSp)
-                .HasConstraintName("FK_tChiTietSanPham_tDanhMucSP");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_tChiTietHDB_tDanhMucSP");
         });
 
         modelBuilder.Entity<TDanhMucSp>(entity =>
@@ -356,22 +278,6 @@ public partial class QlbanManhContext : DbContext
                 .HasConstraintName("FK_tKhachHang_tUser");
         });
 
-        modelBuilder.Entity<TKichThuocCamBien>(entity =>
-        {
-            entity.HasKey(e => e.MaKtcamBien);
-
-            entity.ToTable("tKichThuocCamBien");
-
-            entity.Property(e => e.MaKtcamBien)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("MaKTCamBien");
-            entity.Property(e => e.KichThuoc)
-                .HasMaxLength(150)
-                .IsFixedLength();
-        });
-
         modelBuilder.Entity<TLoaiDt>(entity =>
         {
             entity.HasKey(e => e.MaDt);
@@ -397,19 +303,6 @@ public partial class QlbanManhContext : DbContext
                 .IsUnicode(false)
                 .IsFixedLength();
             entity.Property(e => e.Loai).HasMaxLength(100);
-        });
-
-        modelBuilder.Entity<TMauSac>(entity =>
-        {
-            entity.HasKey(e => e.MaMauSac);
-
-            entity.ToTable("tMauSac");
-
-            entity.Property(e => e.MaMauSac)
-                .HasMaxLength(25)
-                .IsUnicode(false)
-                .IsFixedLength();
-            entity.Property(e => e.TenMauSac).HasMaxLength(100);
         });
 
         modelBuilder.Entity<TNhanVien>(entity =>

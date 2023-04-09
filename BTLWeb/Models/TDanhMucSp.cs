@@ -49,5 +49,5 @@ public partial class TDanhMucSp
 
     public virtual ICollection<TAnhSp> TAnhSps { get; } = new List<TAnhSp>();
 
-    public virtual ICollection<TChiTietSanPham> TChiTietSanPhams { get; } = new List<TChiTietSanPham>();
+    public virtual ICollection<TChiTietHdb> TChiTietHdbs { get; } = new List<TChiTietHdb>();
 }

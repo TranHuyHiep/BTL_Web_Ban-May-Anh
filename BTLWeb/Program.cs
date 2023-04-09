@@ -7,8 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-var connectionString = builder.Configuration.GetConnectionString("QlbanManhContext");
-builder.Services.AddDbContext<QlbanManhContext>(x => x.UseSqlServer(connectionString));
+var connectionString = builder.Configuration.GetConnectionString("QlbanMayAnhContext");
+builder.Services.AddDbContext<QlbanMayAnhContext>(x => x.UseSqlServer(connectionString));
 builder.Services.AddScoped<IELoaiSpRepository, LoaiSpRepository>();
 builder.Services.AddScoped<IHangSxRepository, HangSxRepository>();
 builder.Services.AddSession(options =>

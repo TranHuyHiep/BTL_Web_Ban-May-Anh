@@ -9,7 +9,7 @@ namespace BTLWeb.Controllers
 {
     public class HomeController : Controller
     {
-        QlbanManhContext db = new QlbanManhContext();
+        QlbanMayAnhContext db = new QlbanMayAnhContext();
         private readonly ILogger<HomeController> _logger;
 
         public HomeController(ILogger<HomeController> logger)
