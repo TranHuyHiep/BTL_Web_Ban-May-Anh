@@ -95,6 +95,7 @@ namespace BTLWeb.Controllers
         [HttpPost]
         public JsonResult DeleteAll()
         {
+
             HttpContext.Session.Set<List<ShoppingCartViewModel>>(CommonConstants.SessionCart, new List<ShoppingCartViewModel>());
             return Json(new
             {
@@ -113,25 +114,6 @@ namespace BTLWeb.Controllers
             return View();
         }
 
-        /*public JsonResult GetUser()
-        {
-            if (Request.IsAuthenticated)
-            {
-                var userId = User.Identity.GetUserId();
-                var user = _userManager.FindById(userId);
-                return Json(new
-                {
-                    data = user,
-                    status = true
-                });
-            }
-            return Json(new
-            {
-                status = false
-            });
-        }*/
-
-
         public JsonResult CreateOrder(string orderViewModel)
         {
             var order = new JavaScriptSerializer().Deserialize<OrderViewModel>(orderViewModel);
@@ -141,7 +123,13 @@ namespace BTLWeb.Controllers
             orderNew.UpdateOrder(order);
 
             var cart = HttpContext.Session.Get<List<ShoppingCartViewModel>>(CommonConstants.SessionCart);
-            
+            if(cart == null || cart.Count() == 0)
+            {
+                return Json(new
+                {
+                    status = false
+                });
+            }
             List<TChiTietHdb> orderDetails = new List<TChiTietHdb>();
              
             foreach (var item in cart)

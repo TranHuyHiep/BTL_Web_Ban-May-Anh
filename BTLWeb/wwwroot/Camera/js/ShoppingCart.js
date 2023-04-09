@@ -26,10 +26,9 @@ function loadData() {
                                             <i class="fa fa-minus"></i>
                                         </button>
                                     </div>
-                                    <input type="text" class="quantity form-control form-control-sm bg-secondary border-0 text-center" value="${item.quantity}
-                                       onclick="changeMoney()">
+                                    <input type="text" class="form-control form-control-sm bg-secondary border-0 text-center" value="1">
                                     <div class="input-group-btn">
-                                        <button class="btn btn-sm btn-primary btn-plus" onclick="changeMoney()">
+                                        <button class="btn btn-sm btn-primary btn-plus">
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
@@ -59,6 +58,8 @@ function btnDeleteAll() {
         success: function (res) {
             if (res.status) {
                 alert('Đã xóa giỏ hàng!');
+            } else {
+                alert('Bạn không có sản phẩm nào để xóa!')
             }
             loadData();
         }
@@ -66,7 +67,7 @@ function btnDeleteAll() {
 }
 
 function btnContinue() {
-    window.location.href = "";
+    window.location.href = "../";
 }
 
 function btnCheckout() {
@@ -87,10 +88,34 @@ function btnCheckout() {
         },
         success: function (res) {
             if (res.status) {
-                alert("Mua hàng thành thành công!")
+                alert("Mua hàng thành công!");
+                btnDeleteAll();
+            } else {
+                alert("Bạn chưa có sản phẩm nào trong giỏ hàng!")
             }
-            btnDeleteAll();
         }
     })
+}
+function changeMoney() {
 
 }
+
+(function ($) {
+    "use strict";
+// Product Quantity
+$('.quantity button').on('click', function () {
+    alert("click")
+    var button = $(this);
+    var oldValue = button.parent().parent().find('input').val();
+    if (button.hasClass('btn-plus')) {
+        var newVal = parseFloat(oldValue) + 1;
+    } else {
+        if (oldValue > 0) {
+            var newVal = parseFloat(oldValue) - 1;
+        } else {
+            newVal = 0;
+        }
+    }
+    button.parent().parent().find('input').val(newVal);
+});
+})(jQuery);
